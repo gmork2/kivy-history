@@ -3,7 +3,8 @@ import os
 from kivy.event import EventDispatcher
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.properties import ListProperty, StringProperty, BoundedNumericProperty, ObjectProperty
+from kivy.properties import ListProperty, BoundedNumericProperty, ObjectProperty
+# from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManagerException
 
 from .state import State
@@ -99,13 +100,13 @@ class History(EventDispatcher):
                 pass
         self.loading = False
 
-    def push_state(self, name: str, **kwargs):
+    def push_state(self, name: str, **kwargs) -> None:
         """
         Pushes the given data onto the session history stack with the specified data.
         """
         self.stack.append(State(name, **kwargs))
 
-    def replace_state(self, **kwargs):
+    def replace_state(self, **kwargs) -> None:
         """
         Updates the most recent entry on the history stack to have the specified data.
         """
