@@ -71,17 +71,18 @@ class History(EventDispatcher):
         This method goes to the next screen in session history, the equivalent
         to history.go(1).
 
-        Calling this method to go forward beyond the most recent screen in the session
-        history has no effect and doesn't raise an exception.
+        Calling this method to go forward beyond the most recent screen in the
+        session history has no effect and doesn't raise an exception.
         """
         self.go(1)
 
     def go(self, delta: int = 0) -> None:
         """
-        The position in the history to which you want to move, relative to the current screen.
-        A negative value moves backwards, a positive value moves forwards. So, for example,
-        history.go(2) moves forward two screens and history.go(-2) moves back two screens. If
-        no value is passed or if delta equals 0, it has the same result as calling reload().
+        The position in the history to which you want to move, relative to the
+        current screen. A negative value moves backwards, a positive value moves
+        forwards. So, for example, history.go(2) moves forward two screens and
+        history.go(-2) moves back two screens. If no value is passed or if delta
+        equals 0, it has the same result as calling reload().
 
         If you specify an out-of-bounds value (for instance, specifying -1 when
         there are no previous screen in the session history), this method silently
@@ -102,20 +103,22 @@ class History(EventDispatcher):
 
     def push_state(self, name: str, **kwargs) -> None:
         """
-        Pushes the given data onto the session history stack with the specified data.
+        Pushes the given data onto the session history stack with the specified
+        data.
         """
         self.stack.append(State(name, **kwargs))
 
     def replace_state(self, **kwargs) -> None:
         """
-        Updates the most recent entry on the history stack to have the specified data.
+        Updates the most recent entry on the history stack to have the specified
+        data.
         """
         self.state.update(**kwargs)
 
     def on_state(self, instance, value):
         """
-        This method must be binded to the 'current' property of the screen manager so
-        that it can register the screen changes. For example:
+        This method must be binded to the 'current' property of the screen manager
+        so that it can register the screen changes. For example:
 
         >> manager.bind(current=history.on_state)
         """
