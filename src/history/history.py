@@ -32,7 +32,6 @@ class History(EventDispatcher):
     stack = ListProperty()
     popstate = ObjectProperty()
     index = BoundedNumericProperty(0, min=0)
-    # scroll_restoration = StringProperty('auto')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
