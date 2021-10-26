@@ -15,7 +15,6 @@ class Navigation(BoxLayout):
 
 
 KV = """
-#: import App kivy.app.App
 #: import Clock kivy.clock.Clock
 
 <Link@ButtonBehavior+Label>:
@@ -26,19 +25,19 @@ KV = """
     BoxLayout:
         Button:
             text: '<'
-            on_press: App.get_running_app().root.history.back()
+            on_press: app.root.history.back()
         Button:
             text: '>'
-            on_press: App.get_running_app().root.history.forward()
+            on_press: app.root.history.forward()
         Button:
             text: 'Reload'
-            on_press: App.get_running_app().root.history.go()
+            on_press: app.root.history.go()
         Button:
             text: 'Push'
-            on_press: App.get_running_app().root.history.push_state(name='s4')
+            on_press: app.root.history.push_state(name='s4')
         Button:
             text: 'Replace'
-            on_press: App.get_running_app().root.history.replace_state(name='s1')
+            on_press: app.root.history.replace_state(name='s1')
 
 ScreenManager:
     id: sm
@@ -57,11 +56,11 @@ ScreenManager:
                 Link:
                     markup: True
                     text: '[color=0000ff]Link page 2[/color]'
-                    on_press: App.get_running_app().root.current = 's2'
+                    on_press: app.root.current = 's2'
                 Link:
                     markup: True
                     text: '[color=0000ff]Link page 3[/color]'
-                    on_press: App.get_running_app().root.current = 's3'
+                    on_press: app.root.current = 's3'
     Screen:
         name: 's2'
         BoxLayout:
@@ -77,11 +76,11 @@ ScreenManager:
                 Link:
                     markup: True
                     text: '[color=0000ff]Link page 1[/color]'
-                    on_press: App.get_running_app().root.current = 's1'
+                    on_press: app.root.current = 's1'
                 Link:
                     markup: True
                     text: '[color=0000ff]Link page 3[/color]'
-                    on_press: App.get_running_app().root.current = 's3'
+                    on_press: app.root.current = 's3'
     Screen:
         name: 's3'
         BoxLayout:
@@ -97,11 +96,11 @@ ScreenManager:
                 Link:
                     markup: True
                     text: '[color=0000ff]Link page 1[/color]'
-                    on_press: App.get_running_app().root.current = 's1'
+                    on_press: app.root.current = 's1'
                 Link:
                     markup: True
                     text: '[color=0000ff]Link page 2[/color]'
-                    on_press: App.get_running_app().root.current = 's2'
+                    on_press: app.root.current = 's2'
     Screen:
         name: 's4'
         BoxLayout:
@@ -117,7 +116,7 @@ ScreenManager:
                 Link:
                     markup: True
                     text: '[color=0000ff]Link page 1[/color]'
-                    on_press: App.get_running_app().root.current = 's1'
+                    on_press: app.root.current = 's1'
 """
 
 
