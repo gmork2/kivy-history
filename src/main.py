@@ -5,7 +5,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
-from history.history import History
+from history import History
 
 os.environ["HISTORY_LOG"] = "1"
 
