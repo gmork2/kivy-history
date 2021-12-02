@@ -7,8 +7,6 @@ from kivy.uix.boxlayout import BoxLayout
 
 from history import History
 
-os.environ["HISTORY_LOG"] = "1"
-
 
 class Navigation(BoxLayout):
     pass
@@ -128,5 +126,10 @@ class DemoApp(App):
         return manager
 
 
-if __name__ == '__main__':
+def main():
+    os.environ["HISTORY_LOG"] = "1"
     DemoApp().run()
+
+
+if __name__ == '__main__':
+    main()
