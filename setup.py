@@ -22,7 +22,7 @@ setup_params = {
     'packages': find_namespace_packages(where='src'),
     'package_dir': {'': 'src'},
     'entry_points': {
-        'console_scripts': ['kivy-history=main:main'],
+        'console_scripts': ['kivy-history=kivy_history.sample:main'],
     },
     'keywords': 'kivy, history',
     'python_requires': '>=3',
