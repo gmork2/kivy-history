@@ -2,7 +2,7 @@ import os
 
 from setuptools import find_namespace_packages, setup
 
-from src.history import version
+from src.kivy_history import version
 
 
 def read(fn):

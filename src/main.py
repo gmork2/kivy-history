@@ -5,7 +5,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
-from history import History
+from kivy_history import History
 
 
 class Navigation(BoxLayout):
