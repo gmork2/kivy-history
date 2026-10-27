@@ -149,8 +149,8 @@ stored in the repository.
 3. Create and push an annotated tag:
 
    ```bash
-   git tag -a v2.0.0 -m "Release v2.0.0"
-   git push origin v2.0.0
+   git tag -a v2.0.1 -m "Release v2.0.1"
+   git push origin v2.0.1
    ```
 
 Pushing a `v*` tag triggers
