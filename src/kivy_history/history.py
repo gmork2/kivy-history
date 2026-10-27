@@ -1,10 +1,9 @@
 import os
 
-from kivy.event import EventDispatcher
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.properties import ListProperty, BoundedNumericProperty, ObjectProperty
-# from kivy.properties import StringProperty
+from kivy.event import EventDispatcher
+from kivy.properties import BoundedNumericProperty, ListProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManagerException
 
 from .state import State
@@ -17,7 +16,7 @@ def reload() -> None:
     """
     manager = App.get_running_app().root
     try:
-        manager.current = ''
+        manager.current = ""
     except ScreenManagerException:
         pass
 
@@ -28,6 +27,7 @@ class History(EventDispatcher):
     back and forth through the screen manager, and manipulate the contents
     of the history stack.
     """
+
     loading = False
     stack = ListProperty()
     popstate = ObjectProperty()
@@ -35,9 +35,7 @@ class History(EventDispatcher):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_once(lambda n: self.stack.append(
-            State(App.get_running_app().root.current)
-        ))
+        Clock.schedule_once(lambda n: self.stack.append(State(App.get_running_app().root.current)))
 
     @property
     def lenght(self) -> int:
@@ -122,9 +120,9 @@ class History(EventDispatcher):
         >> manager.bind(current=history.on_state)
         """
         if not self.loading:
-            for s in self.stack[self.index + 1:-1]:
+            for s in self.stack[self.index + 1 : -1]:
                 self.popstate = s
-            self.stack = self.stack[0:self.index + 1]
+            self.stack = self.stack[0 : self.index + 1]
             self.stack.insert(self.index + 1, State(value))
             self.index += 1
 
@@ -139,8 +137,8 @@ class History(EventDispatcher):
         """
         Change the maximum value allowed for the index property.
         """
-        prop = getattr(self, 'property')
-        prop('index').set_max(self, self.lenght - 1)
+        prop = self.property
+        prop("index").set_max(self, self.lenght - 1)
 
     def on_popstate(self, instance, value):
         pass

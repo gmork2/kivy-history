@@ -63,7 +63,7 @@ ScreenManager:
         name: 's2'
         BoxLayout:
             orientation: 'vertical'
-            
+
             Navigation:
 
             BoxLayout:
@@ -83,7 +83,7 @@ ScreenManager:
         name: 's3'
         BoxLayout:
             orientation: 'vertical'
-            
+
             Navigation:
 
             BoxLayout:
@@ -103,7 +103,7 @@ ScreenManager:
         name: 's4'
         BoxLayout:
             orientation: 'vertical'
-            
+
             Navigation:
 
             BoxLayout:
@@ -131,5 +131,5 @@ def main():
     DemoApp().run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
