@@ -10,18 +10,10 @@ os.environ.setdefault("KIVY_NO_ARGS", "1")
 os.environ.setdefault("KIVY_LOG_MODE", "PYTHON")
 
 import pytest
-from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.screenmanager import NoTransition, Screen, ScreenManager
 
 from kivy_history import History
-
-
-class _DemoApp(App):
-    """Minimal App whose root is a ScreenManager."""
-
-    def build(self):
-        return self._manager
 
 
 @pytest.fixture
@@ -36,22 +28,9 @@ def screen_manager():
 
 
 @pytest.fixture
-def running_app(screen_manager, monkeypatch):
-    """A "running" App (without a real window loop) whose root is the manager."""
-    app = _DemoApp()
-    app._manager = screen_manager
-    app.root = screen_manager
-    monkeypatch.setattr(App, "_running_app", app)
-    return app
-
-
-@pytest.fixture
-def history(running_app):
-    """A History instance bound to the ScreenManager's current property."""
-    history = History()
-    running_app.root.bind(current=history.on_state)
-    Clock.tick()
-    return history
+def history(screen_manager):
+    """A History instance tracking the ScreenManager."""
+    return History(screen_manager)
 
 
 @pytest.fixture(autouse=True)

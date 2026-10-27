@@ -1,7 +1,6 @@
 import os
 
 from kivy.app import App
-from kivy.clock import Clock
 from kivy.event import EventDispatcher
 from kivy.properties import BoundedNumericProperty, ListProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManagerException
@@ -10,11 +9,13 @@ from .state import State
 from .utils import console_log
 
 
-def reload() -> None:
+def reload(manager=None) -> None:
     """
-    This function is used to reload the current screen.
+    Reloads the current screen by briefly setting the manager's ``current``
+    screen to an empty string. If ``manager`` is not provided, the running app's
+    root widget is used.
     """
-    manager = App.get_running_app().root
+    manager = manager or App.get_running_app().root
     try:
         manager.current = ""
     except ScreenManagerException:
@@ -26,6 +27,13 @@ class History(EventDispatcher):
     This class exposes useful methods and properties that let you navigate
     back and forth through the screen manager, and manipulate the contents
     of the history stack.
+
+    A ``History`` must be created with the :class:`ScreenManager` it tracks::
+
+        history = History(manager)
+
+    The current screen is recorded immediately and the manager's ``current``
+    property is bound automatically so screen changes are registered.
     """
 
     loading = False
@@ -33,9 +41,15 @@ class History(EventDispatcher):
     popstate = ObjectProperty()
     index = BoundedNumericProperty(0, min=0)
 
-    def __init__(self, **kwargs):
+    def __init__(self, manager, **kwargs):
+        """
+        :param manager: the :class:`~kivy.uix.screenmanager.ScreenManager`
+            whose navigation should be tracked.
+        """
         super().__init__(**kwargs)
-        Clock.schedule_once(lambda n: self.stack.append(State(App.get_running_app().root.current)))
+        self.manager = manager
+        self.stack.append(State(manager.current))
+        manager.bind(current=self.on_state)
 
     @property
     def lenght(self) -> int:
@@ -86,14 +100,13 @@ class History(EventDispatcher):
         has no effect.
         """
         self.loading = True
-        manager = App.get_running_app().root
 
         if not delta:
-            reload()
+            reload(self.manager)
         else:
             try:
                 self.index += delta
-                manager.current = str(self.state)
+                self.manager.current = str(self.state)
             except ValueError:
                 pass
         self.loading = False
@@ -114,10 +127,8 @@ class History(EventDispatcher):
 
     def on_state(self, instance, value):
         """
-        This method must be binded to the 'current' property of the screen manager
-        so that it can register the screen changes. For example:
-
-        >> manager.bind(current=history.on_state)
+        Registers a screen change in the history stack. It is bound automatically
+        to the manager's ``current`` property when the ``History`` is created.
         """
         if not self.loading:
             for s in self.stack[self.index + 1 : -1]:

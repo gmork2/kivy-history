@@ -51,9 +51,7 @@ class MyApp(App):
         manager.add_widget(Screen(name="settings"))
         manager.current = "home"
 
-        manager.history = History()
-        # Register screen changes into the history stack.
-        manager.bind(current=manager.history.on_state)
+        manager.history = History(manager)
         return manager
 
 
@@ -70,6 +68,30 @@ demo. You can also run it after installing the package:
 ```bash
 kivy-history
 ```
+
+## Migration from the previous `History()` API
+
+`History` now requires the `ScreenManager` it tracks (a breaking change from
+the previous no-argument constructor):
+
+```python
+# Before
+history = History()
+manager.bind(current=history.on_state)
+
+# Now
+history = History(manager)
+```
+
+What changed:
+
+- The current screen is recorded **synchronously** when `History(manager)` is
+  created, so the history stack is never empty.
+- The manager's `current` property is bound automatically; the manual
+  `manager.bind(current=history.on_state)` is no longer needed (and would
+  register each change twice).
+- `History` no longer depends on `App.get_running_app()`; it only needs the
+  `ScreenManager`.
 
 ## Development
 
@@ -126,8 +148,8 @@ stored in the repository.
 3. Create and push an annotated tag:
 
    ```bash
-   git tag -a v1.0.4 -m "Release v1.0.4"
-   git push origin v1.0.4
+   git tag -a v2.0.0 -m "Release v2.0.0"
+   git push origin v2.0.0
    ```
 
 Pushing a `v*` tag triggers

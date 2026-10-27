@@ -121,8 +121,7 @@ ScreenManager:
 class DemoApp(App):
     def build(self):
         manager = Builder.load_string(KV)
-        manager.history = History()
-        manager.bind(current=manager.history.on_state)
+        manager.history = History(manager)
         return manager
 
 
