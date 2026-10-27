@@ -132,7 +132,7 @@ pip install -e ".[dev]"
 ## Continuous integration
 
 GitHub Actions runs the lint, test and build steps on every push and pull
-request (Python 3.9–3.12) on `ubuntu-24.04` (pinned because newer runner images
+request (Python 3.9–3.13) on `ubuntu-24.04` (pinned because newer runner images
 no longer ship the prebuilt Python 3.9 toolchain). See
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
