@@ -53,3 +53,26 @@ jobs:
 
       - name: Build package
         run: uv build
+
+  smoke:
+    name: Smoke test (Python ${{ matrix.python-version }}, no Kivy)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.14", "3.15"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install the project without its dependencies
+        run: python -m pip install --no-deps .
+
+      - name: Run smoke test
+        run: python smoke.py
