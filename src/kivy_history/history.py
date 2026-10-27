@@ -2,9 +2,11 @@ import os
 
 from kivy.app import App
 from kivy.event import EventDispatcher
-from kivy.properties import BoundedNumericProperty, ListProperty
+from kivy.properties import BoundedNumericProperty, ListProperty, OptionProperty
 from kivy.uix.screenmanager import ScreenManagerException
+from kivy.uix.scrollview import ScrollView
 
+from .scroll import ScrollRestoration
 from .state import State
 from .utils import console_log
 
@@ -20,6 +22,14 @@ def reload(manager=None) -> None:
         manager.current = ""
     except ScreenManagerException:
         pass
+
+
+def _iter_scrollviews(widget):
+    """Yield every ScrollView found in ``widget``'s subtree."""
+    if isinstance(widget, ScrollView):
+        yield widget
+    for child in widget.children:
+        yield from _iter_scrollviews(child)
 
 
 class History(EventDispatcher):
@@ -41,6 +51,7 @@ class History(EventDispatcher):
     loading = False
     stack = ListProperty()
     index = BoundedNumericProperty(0, min=0)
+    scroll_restoration = OptionProperty("auto", options=[e.value for e in ScrollRestoration])
 
     def __init__(self, manager, **kwargs):
         """
@@ -49,6 +60,7 @@ class History(EventDispatcher):
         """
         super().__init__(**kwargs)
         self.manager = manager
+        self._scroll_positions = {}
         self.stack.append(State(manager.current))
         manager.bind(current=self.on_state)
 
@@ -107,10 +119,13 @@ class History(EventDispatcher):
         else:
             try:
                 self.index += delta
-                self.manager.current = str(self.state)
             except ValueError:
                 pass
             else:
+                self._save_scroll_positions()
+                self.manager.current = str(self.state)
+                if self.scroll_restoration == "auto":
+                    self.restore_scroll()
                 self.dispatch("on_popstate", self.state)
         self.loading = False
 
@@ -120,6 +135,7 @@ class History(EventDispatcher):
         data, drops any forward entries and navigates to the new screen.
         """
         self.loading = True
+        self._save_scroll_positions()
         self.stack = self.stack[0 : self.index + 1]
         self.stack.append(State(name, **kwargs))
         self.index = self.length - 1
@@ -135,12 +151,37 @@ class History(EventDispatcher):
         new_name = name if name is not None else current_name
         self.stack[self.index] = State(new_name, **kwargs)
 
+    def _save_scroll_positions(self, screen=None) -> None:
+        """Remembers the scroll position of every ScrollView in ``screen``."""
+        screen = screen or self.manager.current_screen
+        if screen is None:
+            return
+        self._scroll_positions[screen.name] = [
+            (scroll, scroll.scroll_x, scroll.scroll_y) for scroll in _iter_scrollviews(screen)
+        ]
+
+    def restore_scroll(self, screen=None) -> None:
+        """Restores the saved scroll positions for ``screen`` (current by default)."""
+        screen = screen or self.manager.current_screen
+        if screen is None:
+            return
+        for scroll, x, y in self._scroll_positions.get(screen.name, []):
+            if scroll.parent is not None:
+                scroll.scroll_x = x
+                scroll.scroll_y = y
+
     def on_state(self, instance, value):
         """
         Registers a screen change in the history stack. It is bound automatically
         to the manager's ``current`` property when the ``History`` is created.
         """
         if not self.loading:
+            try:
+                old_screen = self.manager.get_screen(str(self.state))
+            except ScreenManagerException:
+                old_screen = None
+            if old_screen is not None:
+                self._save_scroll_positions(old_screen)
             self.stack = self.stack[0 : self.index + 1]
             self.stack.insert(self.index + 1, State(value))
             self.index += 1

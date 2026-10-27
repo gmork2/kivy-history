@@ -19,6 +19,7 @@ contents of its history stack.
 - Inspect the current `state`, the `stack`, the `index` and the number of
   entries (`length`).
 - Listen to the `on_popstate` event fired after `back()`/`forward()`/`go()`.
+- Restore `ScrollView` positions on navigation (`scroll_restoration`).
 - Optional logging of the stack (`HISTORY_LOG=1`).
 - No visual dependency beyond a Kivy `ScreenManager` (works with any
   transition).
@@ -103,6 +104,7 @@ The API mirrors the
 |---|---|
 | `history.length` | `history.length` |
 | `history.state` | `history.state` |
+| `history.scrollRestoration` | `history.scroll_restoration` |
 | `back()` / `forward()` / `go(delta)` | `back()` / `forward()` / `go(delta)` |
 | `pushState(state, title, url)` | `push_state(name, **kwargs)` |
 | `replaceState(state, title, url)` | `replace_state(name=None, **kwargs)` |
@@ -171,8 +173,8 @@ stored in the repository.
 3. Create and push an annotated tag:
 
    ```bash
-   git tag -a v2.0.1 -m "Release v2.0.1"
-   git push origin v2.0.1
+   git tag -a v2.1.0 -m "Release v2.1.0"
+   git push origin v2.1.0
    ```
 
 Pushing a `v*` tag triggers

@@ -1,3 +1,16 @@
+from kivy.clock import Clock
+from kivy.uix.label import Label
+from kivy.uix.scrollview import ScrollView
+
+
+def _add_scrollview(screen):
+    scroll = ScrollView()
+    scroll.add_widget(Label(text="content", size_hint_y=None, height=2000))
+    screen.add_widget(scroll)
+    Clock.tick()
+    return scroll
+
+
 def test_initial_state_is_recorded_immediately(history):
     assert history.length == 1
     assert history.index == 0
@@ -122,3 +135,46 @@ def test_state_property_returns_current_entry(history, screen_manager):
     screen_manager.current = "s2"
 
     assert str(history.state) == "s2"
+
+
+def test_scroll_restoration_defaults_to_auto(history):
+    assert history.scroll_restoration == "auto"
+
+
+def test_go_restores_scroll_in_auto_mode(history, screen_manager):
+    scroll = _add_scrollview(screen_manager.get_screen("s1"))
+    scroll.scroll_y = 0.25
+
+    screen_manager.current = "s2"  # leaving s1 saves its scroll position
+    scroll.scroll_y = 0.0  # simulate the position being lost
+
+    history.back()  # back to s1 -> auto restore
+
+    assert scroll.scroll_y == 0.25
+
+
+def test_go_does_not_restore_scroll_in_manual_mode(history, screen_manager):
+    scroll = _add_scrollview(screen_manager.get_screen("s1"))
+    scroll.scroll_y = 0.25
+
+    history.scroll_restoration = "manual"
+    screen_manager.current = "s2"
+    scroll.scroll_y = 0.0
+
+    history.back()
+
+    assert scroll.scroll_y == 0.0
+
+
+def test_restore_scroll_manual_hook(history, screen_manager):
+    scroll = _add_scrollview(screen_manager.get_screen("s1"))
+    scroll.scroll_y = 0.3
+
+    history.scroll_restoration = "manual"
+    screen_manager.current = "s2"
+    scroll.scroll_y = 0.0
+    history.back()
+    assert scroll.scroll_y == 0.0  # manual mode does not auto-restore
+
+    history.restore_scroll()
+    assert scroll.scroll_y == 0.3

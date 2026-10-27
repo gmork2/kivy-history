@@ -1,3 +1,4 @@
+from .scroll import ScrollRestoration
 from .version import __version__
 
 try:
@@ -5,4 +6,4 @@ try:
 except ImportError:
     pass
 
-__all__ = ["History", "__version__"]
+__all__ = ["History", "ScrollRestoration", "__version__"]
