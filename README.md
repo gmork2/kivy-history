@@ -80,8 +80,11 @@ remaining fully compatible with `pip` (standard PEP 517/621 `pyproject.toml`).
 # Create the environment and install the project in editable mode + dev tools
 uv sync --extra dev
 
-# Run the test suite (headless, uses SDL2's dummy video driver)
+# Run the test suite (headless)
 uv run pytest
+
+# In a headless environment such as CI, run under a virtual framebuffer:
+xvfb-run -a uv run pytest
 
 # Lint and format checks
 uv run ruff check .

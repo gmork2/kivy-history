@@ -1,13 +1,11 @@
 """Shared pytest fixtures for the kivy_history test suite.
 
-Kivy needs a window to create widgets. To keep the suite headless (and CI
-friendly) we use SDL2's "dummy" video driver, which creates an off-screen
-window without requiring a display server.
+Kivy needs a window to create widgets. Run the suite under a display server:
+a desktop session locally, or ``xvfb-run -a`` in headless/CI environments.
 """
 
 import os
 
-os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 os.environ.setdefault("KIVY_NO_ARGS", "1")
 os.environ.setdefault("KIVY_LOG_MODE", "PYTHON")
 

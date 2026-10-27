@@ -43,12 +43,13 @@ jobs:
       - name: Lint with Ruff
         run: uv run ruff check .
 
+      - name: Install Xvfb and OpenGL libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1 libgl1-mesa-dri libegl1
+
       - name: Run tests
-        run: uv run pytest
-        env:
-          SDL_VIDEODRIVER: dummy
-          KIVY_NO_ARGS: "1"
-          KIVY_LOG_MODE: PYTHON
+        run: xvfb-run -a uv run pytest
 
       - name: Build package
         run: uv build
