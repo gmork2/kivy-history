@@ -94,6 +94,13 @@ uv run ruff format --check .
 uv build
 ```
 
+> **Nota sobre tests headless:** Kivy necesita una ventana con contexto OpenGL,
+> por lo que `SDL_VIDEODRIVER=dummy` (el driver *dummy* de SDL2) **no** sirve
+> para ejecutar la suite en GitHub Actions: no expone OpenGL y el proceso
+> termina con `exit code 102`. Por eso el CI ejecuta los tests bajo
+> [Xvfb](https://en.wikipedia.org/wiki/Xvfb) con renderizado por software de
+> Mesa (`libgl1-mesa-dri`, llvmpipe).
+
 With `pip`, install in editable mode with the dev extras:
 
 ```bash
@@ -103,7 +110,8 @@ pip install -e ".[dev]"
 ## Continuous integration
 
 GitHub Actions runs the lint, test and build steps on every push and pull
-request (Python 3.9–3.12). See
+request (Python 3.9–3.12) on `ubuntu-24.04` (pinned because newer runner images
+no longer ship the prebuilt Python 3.9 toolchain). See
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Releasing / deploying to PyPI
