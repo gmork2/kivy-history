@@ -2,7 +2,7 @@ import os
 
 from kivy.app import App
 from kivy.event import EventDispatcher
-from kivy.properties import BoundedNumericProperty, ListProperty, ObjectProperty
+from kivy.properties import BoundedNumericProperty, ListProperty
 from kivy.uix.screenmanager import ScreenManagerException
 
 from .state import State
@@ -36,9 +36,10 @@ class History(EventDispatcher):
     property is bound automatically so screen changes are registered.
     """
 
+    __events__ = ("on_popstate",)
+
     loading = False
     stack = ListProperty()
-    popstate = ObjectProperty()
     index = BoundedNumericProperty(0, min=0)
 
     def __init__(self, manager, **kwargs):
@@ -52,7 +53,7 @@ class History(EventDispatcher):
         manager.bind(current=self.on_state)
 
     @property
-    def lenght(self) -> int:
+    def length(self) -> int:
         """
         Returns an Integer representing the number of elements in the history,
         including the currently loaded screen.
@@ -109,21 +110,30 @@ class History(EventDispatcher):
                 self.manager.current = str(self.state)
             except ValueError:
                 pass
+            else:
+                self.dispatch("on_popstate", self.state)
         self.loading = False
 
     def push_state(self, name: str, **kwargs) -> None:
         """
         Pushes the given data onto the session history stack with the specified
-        data.
+        data, drops any forward entries and navigates to the new screen.
         """
+        self.loading = True
+        self.stack = self.stack[0 : self.index + 1]
         self.stack.append(State(name, **kwargs))
+        self.index = self.length - 1
+        self.manager.current = name
+        self.loading = False
 
-    def replace_state(self, **kwargs) -> None:
+    def replace_state(self, name: str = None, **kwargs) -> None:
         """
-        Updates the most recent entry on the history stack to have the specified
-        data.
+        Replaces the current entry with a new state built from ``name`` (optional)
+        and ``kwargs``. The previous state is discarded, not merged.
         """
-        self.state.update(**kwargs)
+        current_name = self.state.state["name"]
+        new_name = name if name is not None else current_name
+        self.stack[self.index] = State(new_name, **kwargs)
 
     def on_state(self, instance, value):
         """
@@ -131,8 +141,6 @@ class History(EventDispatcher):
         to the manager's ``current`` property when the ``History`` is created.
         """
         if not self.loading:
-            for s in self.stack[self.index + 1 : -1]:
-                self.popstate = s
             self.stack = self.stack[0 : self.index + 1]
             self.stack.insert(self.index + 1, State(value))
             self.index += 1
@@ -149,7 +157,10 @@ class History(EventDispatcher):
         Change the maximum value allowed for the index property.
         """
         prop = self.property
-        prop("index").set_max(self, self.lenght - 1)
+        prop("index").set_max(self, self.length - 1)
 
-    def on_popstate(self, instance, value):
-        pass
+    def on_popstate(self, state):
+        """
+        Event fired after navigating back/forward (like the JavaScript
+        ``popstate`` event); ``state`` is the entry being navigated to.
+        """

@@ -17,7 +17,8 @@ contents of its history stack.
 - Navigate with `back()`, `forward()` and `go(delta)`.
 - Push and replace states with `push_state()` and `replace_state()`.
 - Inspect the current `state`, the `stack`, the `index` and the number of
-  entries (`lenght`).
+  entries (`length`).
+- Listen to the `on_popstate` event fired after `back()`/`forward()`/`go()`.
 - Optional logging of the stack (`HISTORY_LOG=1`).
 - No visual dependency beyond a Kivy `ScreenManager` (works with any
   transition).
@@ -92,6 +93,27 @@ What changed:
   register each change twice).
 - `History` no longer depends on `App.get_running_app()`; it only needs the
   `ScreenManager`.
+
+## API alignment with the JavaScript History API
+
+The API mirrors the
+[JavaScript History API](https://developer.mozilla.org/en-US/docs/Web/API/History):
+
+| JavaScript | kivy-history |
+|---|---|
+| `history.length` | `history.length` |
+| `history.state` | `history.state` |
+| `back()` / `forward()` / `go(delta)` | `back()` / `forward()` / `go(delta)` |
+| `pushState(state, title, url)` | `push_state(name, **kwargs)` |
+| `replaceState(state, title, url)` | `replace_state(name=None, **kwargs)` |
+| `popstate` event (`event.state`) | `on_popstate` event (receives the target `state`) |
+
+Kivy particularities:
+
+- The "URL" is the `ScreenManager` screen name, so `push_state(name, ...)`
+  navigates to that screen and drops any forward entries (like a new navigation).
+- `replace_state` replaces the current entry **entirely** (no merge) and can
+  optionally change the screen name via `name`.
 
 ## Development
 
