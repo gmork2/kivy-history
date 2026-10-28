@@ -71,6 +71,35 @@ demo. You can also run it after installing the package:
 kivy-history
 ```
 
+## Standalone binaries
+
+On every `v*` tag (and on manual dispatch), a GitHub Actions workflow
+([`.github/workflows/release-binaries.yml`](.github/workflows/release-binaries.yml))
+builds unsigned, self-contained binaries of the sample reader for two
+platforms:
+
+| Platform | Artifact |
+|---|---|
+| Windows | `kivy-history-sample.exe` |
+| Linux x86_64 | `kivy-history-sample-x86_64.AppImage` |
+
+They are attached to the GitHub Release of the tag (and are also available as
+workflow artifacts on manual runs). Note that they are **not code-signed**, so
+Windows SmartScreen will show a warning.
+
+To build them locally:
+
+```bash
+python -m pip install . pyinstaller
+
+# Windows .exe
+pyinstaller --onefile --windowed --icon assets/icon.ico --name kivy-history-sample app.py
+
+# Linux AppImage
+pyinstaller --onefile --windowed --name kivy-history-sample app.py
+./tools/package_appimage.sh
+```
+
 ## Migration from the previous `History()` API
 
 `History` now requires the `ScreenManager` it tracks (a breaking change from
