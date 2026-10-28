@@ -12,6 +12,10 @@ contents of its history stack.
 
 ## Screenshots
 
+Screenshots of the sample reader in
+[`src/kivy_history/sample.py`](src/kivy_history/sample.py) — the demo app behind
+the `kivy-history` command.
+
 <table>
   <tr>
     <td align="center"><img src="shots/cover.png" width="160" alt="Cover"><br><sub>Cover</sub></td>
