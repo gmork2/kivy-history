@@ -12,6 +12,21 @@ contents of its history stack.
 
 ![](image.png)
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="shots/cover.png" width="160" alt="Cover"><br><sub>Cover</sub></td>
+    <td align="center"><img src="shots/toc.png" width="160" alt="Contents"><br><sub>Contents</sub></td>
+    <td align="center"><img src="shots/intro.png" width="160" alt="Introduction"><br><sub>Introduction</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="shots/api.png" width="160" alt="API reference"><br><sub>API reference</sub></td>
+    <td align="center"><img src="shots/compare.png" width="160" alt="JavaScript comparison"><br><sub>JavaScript comparison</sub></td>
+    <td align="center"><img src="shots/events.png" width="160" alt="Events and scroll"><br><sub>Events and scroll</sub></td>
+  </tr>
+</table>
+
 ## Features
 
 - Navigate with `back()`, `forward()` and `go(delta)`.
