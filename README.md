@@ -10,8 +10,6 @@
 It lets you navigate back and forth through a `ScreenManager` and manipulate the
 contents of its history stack.
 
-![](image.png)
-
 ## Screenshots
 
 <table>
