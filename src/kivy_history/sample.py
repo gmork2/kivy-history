@@ -850,7 +850,7 @@ KV = """
                     size_hint_y: None
                     height: dp(10)
                 Label:
-                    text: 'A pocket guide · v2.1.0'
+                    text: 'A pocket guide · v2.1.1'
                     font_name: 'Serif'
                     font_size: sp(14)
                     color: 0.54, 0.49, 0.42, 1
